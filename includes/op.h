@@ -6,16 +6,19 @@
 /*   By: zaz <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2019/01/09 12:26:08 by amoroziu         ###   ########.fr       */
+/*   Updated: 2013/11/06 14:21:46 by zaz              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-** All sizes are in bytes.
-** It is assumed that an int is 32 bits. Is true at home?
+** Toutes les tailles sont en octets.
+** On part du principe qu'un int fait 32 bits. Est-ce vrai chez vous ?
 */
+
 #ifndef OP_H
 # define OP_H
+
+# include <stdint.h>
 
 # define IND_SIZE				2
 # define REG_SIZE				4
@@ -27,7 +30,7 @@
 
 # define MAX_ARGS_NUMBER		4
 # define MAX_PLAYERS			4
-# define MEM_SIZE				(4*1024)
+# define MEM_SIZE				(4 * 1024)
 # define IDX_MOD				(MEM_SIZE / 8)
 # define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
 
@@ -59,11 +62,25 @@ typedef char	t_arg_type;
 # define COMMENT_LENGTH			(2048)
 # define COREWAR_EXEC_MAGIC		0xea83f3
 
-typedef struct		s_header
+typedef struct					s_header
 {
-	unsigned int		magic;
-	char				prog_name[PROG_NAME_LENGTH + 1];
-	unsigned int		prog_size;
-	char				comment[COMMENT_LENGTH + 1];
-}					t_header;
+	unsigned int				magic;
+	char						prog_name[PROG_NAME_LENGTH + 1];
+	unsigned int				prog_size;
+	char						comment[COMMENT_LENGTH + 1];
+}								t_header;
+
+typedef struct					s_op
+{
+	char		*name;
+	uint8_t		code;
+	uint8_t		args_num;
+	uint8_t		is_args_types;
+	uint8_t		args_types[3];
+	uint8_t		t_dir_size;
+	int			to_wait;
+}								t_op;
+
+extern t_op						g_op[16];
+
 #endif
