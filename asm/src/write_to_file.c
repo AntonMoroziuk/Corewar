@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/13 12:50:29 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/13 12:50:33 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 16:08:06 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static char	*insert_spaces(t_asm *champ, char *line)
 	int		i;
 	int		j;
 
-	bytes = (champ->written_bytes % 4 + ft_strlen(size)) / 4;
-	new = ft_strnew(ft_strlen(size) + bytes);
+	bytes = (champ->written_bytes % 4 + ft_strlen(line)) / 4;
+	new = ft_strnew(ft_strlen(line) + bytes);
 	i = -1;
 	j = 0;
 	while (line[j])
@@ -56,6 +56,7 @@ int			write_magic(t_asm *champ)
 	int		i;
 
 	str = ft_strnew(8);
+	magic = COREWAR_EXEC_MAGIC;
 	i = 8;
 	while (--i >= 0)
 	{

@@ -6,11 +6,37 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/14 14:32:18 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/14 14:32:20 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 15:55:43 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/asm.h"
+
+void		fill_missed_labels(t_asm *champ)
+{
+	t_missed_label	*cur;
+	t_label			*label;
+	char			*temp;
+	int32_t			value;
+	int				i;
+
+	cur = champ->missed_labels;
+	while (cur)
+	{
+		label = champ->labels;
+		while (!ft_strequ(cur->label_name, label->label_name))
+			label = label->next;
+		value = (int32_t)(cur->code_pos - label->code_pos);
+		temp = int_to_hex(value, cur->size);
+		i = -1;
+		while (temp[++i])
+		{
+			*(cur->code_pos) = temp[i];
+			cur->code_pos++;
+		}
+		cur = cur->next;
+	}
+}
 
 void		add_new_missed(t_asm *champ, int size, char *name)
 {
@@ -39,7 +65,7 @@ int			get_label_value(char *label_name, t_asm *champ, int size)
 	cur = champ->labels;
 	while (cur)
 	{
-		if (ft_strequ(cur->value, label_name))
+		if (ft_strequ(cur->label_name, label_name))
 			break ;
 		cur = cur->next;
 	}
@@ -63,6 +89,7 @@ void		add_label(t_asm *champ, t_token *label)
 	pos = champ->code;
 	while (*pos)
 		pos++;
+	new->code_pos = pos;
 	new->next = champ->labels;
 	champ->labels = new;
 }

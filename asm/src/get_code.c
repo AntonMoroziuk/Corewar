@@ -6,13 +6,13 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/13 13:28:29 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/13 13:28:31 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 15:47:26 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/asm.h"
 
-static int	other_functions(t_asm *champ, t_asm **cur)
+static int	other_functions(t_asm *champ, t_token **cur)
 {
 	if (ft_strequ((*cur)->value, "zjmp"))
 		return (zjmp(champ, cur));
@@ -21,7 +21,7 @@ static int	other_functions(t_asm *champ, t_asm **cur)
 	if (ft_strequ((*cur)->value, "sti"))
 		return (sti(champ, cur));
 	if (ft_strequ((*cur)->value, "fork"))
-		return (fork(champ, cur));
+		return (ffork(champ, cur));
 	if (ft_strequ((*cur)->value, "lld"))
 		return (lld(champ, cur));
 	if (ft_strequ((*cur)->value, "lldi"))
@@ -30,9 +30,10 @@ static int	other_functions(t_asm *champ, t_asm **cur)
 		return (lfork(champ, cur));
 	if (ft_strequ((*cur)->value, "aff"))
 		return (aff(champ, cur));
+	return (0);
 }
 
-static int	get_instruction(t_asm *champ, t_asm **cur)
+static int	get_instruction(t_asm *champ, t_token **cur)
 {
 	if (ft_strequ((*cur)->value, "live"))
 		return (live(champ, cur));
@@ -72,7 +73,6 @@ int			get_code(t_asm *champ)
 {
 	t_token	*cur;
 
-	//prepare_labels(champ);
 	cur = champ->tokens;
 	while (cur)
 	{
@@ -85,7 +85,8 @@ int			get_code(t_asm *champ)
 			cur = cur->next;
 		}
 		else
-			return (err_mesg(INVALID_INSTRUCTION, cur->line))
+			return (err_mesg(INVALID_INSTRUCTION, cur->line));
 	}
+	fill_missed_labels(champ);
 	return (1);
 }

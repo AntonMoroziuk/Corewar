@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/12 12:50:39 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/13 11:44:44 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 15:58:59 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	is_instruction(char *str)
 			ft_strequ(str, "lfork") || ft_strequ(str, "aff"));
 }
 
-static int	get_direct_value(t_token *token, char *value, int line_idx)
+static int	get_direct_value(t_asm *champ, t_token *token, char *value, int line_idx)
 {
 	int		i;
 
@@ -40,7 +40,7 @@ static int	get_direct_value(t_token *token, char *value, int line_idx)
 		return (1);
 	}
 	i = 1;
-	while (value[++i] && ft_strchr(value[i], LABEL_CHARS))
+	while (value[++i] && ft_strchr(LABEL_CHARS, value[i]))
 		;
 	if (value[i])
 		return (err_mesg(BAD_CHARACTER_IN_LABEL, line_idx));
@@ -51,14 +51,14 @@ static int	get_direct_value(t_token *token, char *value, int line_idx)
 	return (1);
 }
 
-static int	get_label(t_token *token, char *value, int line_idx)
+static int	get_label(t_asm *champ, t_token *token, char *value, int line_idx)
 {
 	int		i;
 
 	i = -1;
-	while (value[++i] && ft_strchr(value[i], LABEL_CHARS))
+	while (value[++i] && ft_strchr(LABEL_CHARS, value[i]))
 		;
-	if (value[i] && !(i == ft_strlen(value) - 1 && value[i] == LABEL_CHAR))
+	if (value[i] && !(i == (int)(ft_strlen(value) - 1) && value[i] == LABEL_CHAR))
 		return (err_mesg(BAD_CHARACTER_IN_LABEL, line_idx));
 	if (value[i - 1] != LABEL_CHAR || ft_strlen(value) < 2)
 		return (err_mesg(BAD_LABEL_FORMAT, line_idx));
@@ -69,7 +69,7 @@ static int	get_label(t_token *token, char *value, int line_idx)
 	return (1);
 }
 
-int			token_with_value(t_token *token, char *value, int line_idx)
+int			token_with_value(t_asm *champ, t_token *token, char *value, int line_idx)
 {
 	if (is_instruction(value))
 	{
@@ -77,11 +77,11 @@ int			token_with_value(t_token *token, char *value, int line_idx)
 		token->type = INSTRUCTION;
 		return (1);
 	}
-	if (ft_strchr(DIRECT_CHAR, value) == value)
-		return (get_direct_value(token, value, line_idx));
-	if (ft_strchr(LABEL_CHAR) && ft_strchr(LABEL_CHAR) != value)
+	if (ft_strchr(value, DIRECT_CHAR) == value)
+		return (get_direct_value(champ, token, value, line_idx));
+	if (ft_strchr(value, LABEL_CHAR) && ft_strchr(value, LABEL_CHAR) != value)
 	{
-		return (get_label(token, value, line_idx));
+		return (get_label(champ, token, value, line_idx));
 	}
-	return (get_indirect_value(token, value, line));
+	return (get_indirect_value(champ, token, value, line_idx));
 }

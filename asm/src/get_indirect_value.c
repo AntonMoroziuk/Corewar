@@ -6,18 +6,18 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/13 12:00:51 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/13 12:00:52 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 15:52:32 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/asm.h"
 
-static int	get_label(t_token *token, char *value, int line_idx)
+static int	get_label(t_asm *champ, t_token *token, char *value, int line_idx)
 {
 	int 	i;
 
 	i = 0;
-	while (value[++i] && ft_strchr(value[i], LABEL_CHARS))
+	while (value[++i] && ft_strchr(LABEL_CHARS, value[i]))
 		;
 	if (value[i])
 		return (err_mesg(BAD_CHARACTER_IN_LABEL, line_idx));
@@ -36,22 +36,22 @@ static int	get_registry(t_token *token, char *value, int line_idx)
 	reg = 0;
 	i = 0;
 	while (value[++i] && ft_isdigit(value[i]))
-		reg = res * 10 + value[i] - '0';
+		reg = reg * 10 + value[i] - '0';
 	if (value[i])
 		return (err_mesg(BAD_CHARACTER_IN_REGISTER, line_idx));
 	if (reg > 99 || !reg)
 		return (err_mesg(BAD_REGISTER_IDX, line_idx));
 	token->type = REGISTER;
-	token->value = ft_strusb(value, 1, ft_strlen(value) - 1);
+	token->value = ft_strsub(value, 1, ft_strlen(value) - 1);
 	return (1);
 }
 
-int			get_indirect_value(t_token *token, char *value, int line_idx)
+int			get_indirect_value(t_asm *champ, t_token *token, char *value, int line_idx)
 {
 	int 	i;
 
 	if (value[0] == LABEL_CHAR)
-		return (get_label(token, value, line_idx));
+		return (get_label(champ, token, value, line_idx));
 	if (value[0] == 'r')
 		return (get_registry(token, value, line_idx));
 	i = -1;

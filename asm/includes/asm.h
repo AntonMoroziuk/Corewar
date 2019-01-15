@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 13:30:52 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/09 13:31:27 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/15 16:02:00 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include <fcntl.h>
 # include <stdint.h>
 # include "errors.h"
-# include "../../includes/op.h"
+# include "op.h"
+# include "../../libft/includes/libft.h"
 
 enum e_token_type { LABEL, INSTRUCTION, REGISTER, DIRECT_VALUE,
 	INDIRECT_VALUE, DIRECT_LABEL, INDIRECT_LABEL, SEPARATOR};
@@ -102,9 +103,14 @@ int				get_tokens(char **code, t_asm *champ);
 int 			unknown_character(char c);
 
 /*
+** token_with_value.c
+*/
+int				token_with_value(t_asm *champ, t_token *token, char *value, int line_idx);
+
+/*
 ** get_indirect_value.c
 */
-int				get_indirect_value(t_token *token, char *value, int line_idx);
+int				get_indirect_value(t_asm *champ, t_token *token, char *value, int line_idx);
 
 /*
 ** check.c
@@ -120,27 +126,34 @@ int 			label_exists(char *label, t_asm *champ);
 ** label_stuff.c
 */
 void			add_label(t_asm *champ, t_token *label);
+void			add_new_missed(t_asm *champ, int size, char *name);
 int				get_label_value(char *label_name, t_asm *champ, int size);
+void			fill_missed_labels(t_asm *champ);
+
+/*
+** add_token.c
+*/
+int				add_token(char *line, int i, int *j, t_asm *champ);
 
 /*
 ** assembler functions, each in it's own file
 */
-int				add(t_asm *champ, t_asm **cur);
-int				aff(t_asm *champ, t_asm **cur);
-int				and(t_asm *champ, t_asm **cur);
-int				fork(t_asm *champ, t_asm **cur);
-int				ld(t_asm *champ, t_asm **cur);
-int				ldi(t_asm *champ, t_asm **cur);
-int				lfork(t_asm *champ, t_asm **cur);
-int				live(t_asm *champ, t_asm **cur);
-int				lld(t_asm *champ, t_asm **cur);
-int				lldi(t_asm *champ, t_asm **cur);
-int				or(t_asm *champ, t_asm **cur);
-int				st(t_asm *champ, t_asm **cur);
-int				sti(t_asm *champ, t_asm **cur);
-int				sub(t_asm *champ, t_asm **cur);
-int				xor(t_asm *champ, t_asm **cur);
-int				zjmp(t_asm *champ, t_asm **cur);
+int				add(t_asm *champ, t_token **cur);
+int				aff(t_asm *champ, t_token **cur);
+int				and(t_asm *champ, t_token **cur);
+int				ffork(t_asm *champ, t_token **cur);
+int				ld(t_asm *champ, t_token **cur);
+int				ldi(t_asm *champ, t_token **cur);
+int				lfork(t_asm *champ, t_token **cur);
+int				live(t_asm *champ, t_token **cur);
+int				lld(t_asm *champ, t_token **cur);
+int				lldi(t_asm *champ, t_token **cur);
+int				or(t_asm *champ, t_token **cur);
+int				st(t_asm *champ, t_token **cur);
+int				sti(t_asm *champ, t_token **cur);
+int				sub(t_asm *champ, t_token **cur);
+int				xor(t_asm *champ, t_token **cur);
+int				zjmp(t_asm *champ, t_token **cur);
 
 
 #endif
