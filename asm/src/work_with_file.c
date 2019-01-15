@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 13:42:45 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/09 13:42:47 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/13 11:42:06 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,5 @@ void		work_with_file(char *filename)
 	new_name[i - 1] = 'c';
 	new_name[i] = 'o';
 	new_name[i + 1] = 'r';
-	compile(content, filename)
+	compile(content, filename);
 }
