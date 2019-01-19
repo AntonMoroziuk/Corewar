@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/13 13:28:29 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/15 15:47:26 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/16 16:47:32 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,14 @@ static int	get_instruction(t_asm *champ, t_token **cur)
 	return (other_functions(champ, cur));
 }
 
-void		add_to_code(t_asm *champ, char *new_code)
+void		add_to_code(t_asm *champ, char *new_code, int size)
 {
-	char	*temp;
+	int		i;
 
-	if (!champ->code)
-		champ->code = new_code;
-	else
-	{
-		temp = champ->code;
-		champ->code = ft_strjoin(champ->code, new_code);
-		ft_strdel(&temp);
-		ft_strdel(&new_code);
-	}
+	i = -1;
+	while (++i < size)
+		champ->code[champ->cur_pos++] = new_code[i];
+	ft_strdel(&new_code);
 }
 
 int			get_code(t_asm *champ)
@@ -74,19 +69,19 @@ int			get_code(t_asm *champ)
 	t_token	*cur;
 
 	cur = champ->tokens;
+	champ->code = ft_strnew(champ->size);
+	champ->cur_pos = 0;
 	while (cur)
 	{
 		if (cur->type == INSTRUCTION)
+		{
 			if (!get_instruction(champ, &cur))
 				return (0);
-		if (cur->type == LABEL)
-		{
-			add_label(champ, cur);
-			cur = cur->next;
 		}
+		else if (cur->type == LABEL)
+			cur = cur->next;
 		else
 			return (err_mesg(INVALID_INSTRUCTION, cur->line));
 	}
-	fill_missed_labels(champ);
 	return (1);
 }
