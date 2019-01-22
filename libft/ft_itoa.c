@@ -3,55 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 12:23:41 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/27 12:35:53 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/25 07:39:47 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/25 07:39:48 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-static	int	get_size(long long int n)
+static size_t	ft_count(int n)
 {
-	int		size;
+	size_t count;
 
 	if (n == 0)
 		return (1);
-	size = 0;
+	count = n < 0;
 	if (n < 0)
-		size++;
-	while (n != 0)
+		n *= -1;
+	while (n > 0)
 	{
-		size++;
 		n /= 10;
+		count++;
 	}
-	return (size);
+	return (count);
 }
 
-char		*ft_itoa(long long int n)
+char			*ft_itoa(int n)
 {
-	int		i;
-	int		k;
-	int		size;
+	size_t	len;
 	char	*res;
 
-	i = 0;
-	size = get_size(n);
-	res = (char*)malloc(size + 1);
-	if (res == NULL)
+	if (n == -2147483648)
+	{
+		res = ft_strdup("-2147483648");
+		return (res);
+	}
+	len = ft_count(n);
+	if (!(res = ft_strnew(len)))
 		return (NULL);
 	if (n < 0)
-		res[i++] = '-';
-	res[size--] = '\0';
-	while (size >= i)
 	{
-		k = n % 10;
-		if (k < 0)
-			k *= -1;
-		res[size] = k + '0';
-		size--;
-		n /= 10;
+		n *= -1;
+		res[0] = '-';
 	}
+	while (n >= 10)
+	{
+		res[len - 1] = n % 10 + '0';
+		n /= 10;
+		len--;
+	}
+	res[len - 1] = n + '0';
 	return (res);
 }

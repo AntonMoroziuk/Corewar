@@ -3,37 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 11:29:00 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/30 18:44:30 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/24 07:54:07 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/24 07:54:07 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_atoi(const char *nptr)
+#include "libft.h"
+
+int			ft_atoi(const char *str)
 {
-	int					i;
-	unsigned long int	res;
-	int					sign;
+	size_t		i;
+	long long	res;
+	int			sign;
 
 	i = 0;
-	sign = 1;
-	while (nptr[i] == ' ' || nptr[i] == '\f' || nptr[i] == '\r'
-		|| nptr[i] == '\n' || nptr[i] == '\t' || nptr[i] == '\v')
-		i++;
-	if (nptr[i] == '+' || nptr[i] == '-')
-	{
-		sign = (nptr[i] == '+') - (nptr[i] == '-');
-		i++;
-	}
 	res = 0;
-	while (nptr[i] >= '0' && nptr[i] <= '9')
+	sign = 1;
+	while (ft_isspace(str[i]))
+		i++;
+	if (str[i] == '-')
+		sign = -1;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (ft_isdigit(str[i]))
 	{
-		res = res * 10 + (nptr[i] - '0');
-		if (res >= 9223372036854775807 && sign == 1)
+		if ((res > 922337203685477580 || (res == 922337203685477580
+		&& (str[i] - '0') > 7)) && sign == 1)
 			return (-1);
-		else if (res > 9223372036854775807 && sign == -1)
+		else if ((res > 922337203685477580 || (res == 922337203685477580
+		&& (str[i] - '0') > 8)) && sign == -1)
 			return (0);
+		res = res * 10 + (str[i] - '0');
 		i++;
 	}
 	return ((int)(res * sign));

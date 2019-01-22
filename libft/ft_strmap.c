@@ -3,53 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 11:35:42 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/30 16:39:23 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/23 11:40:29 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/23 11:40:32 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-static	int	count(char const *s, char (*f)(char))
+char	*ft_strmap(char const *s, char (*f)(char))
 {
-	int		i;
-	int		count;
+	size_t	i;
+	char	*res;
 
+	if (!s || !f)
+		return (NULL);
+	if (!(res = ft_strnew(ft_strlen(s))))
+		return (NULL);
 	i = 0;
-	count = 0;
 	while (s[i])
 	{
-		if ((*f)(s[i]))
-			count++;
+		res[i] = (*f)(s[i]);
 		i++;
 	}
-	return (count);
-}
-
-char		*ft_strmap(char const *s, char (*f)(char))
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	if (s == NULL || f == NULL)
-		return (NULL);
-	str = (char*)malloc(count(s, f) + 1);
-	if (str == NULL)
-		return (NULL);
-	while (s[i])
-	{
-		if ((*f)(s[i]))
-		{
-			str[j] = (*f)(s[i]);
-			j++;
-		}
-		i++;
-	}
-	str[j] = '\0';
-	return (str);
+	return (res);
 }

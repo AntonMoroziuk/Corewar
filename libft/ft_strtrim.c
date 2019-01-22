@@ -3,51 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 11:34:00 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/30 18:18:33 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/24 11:16:16 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/24 11:16:17 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-static int	find_end(char const *s, int start)
+char	*ft_strtrim(char const *s)
 {
-	int		end;
-
-	end = start;
-	while (s[end])
-		end++;
-	while (s[--end] == ' ' || s[end] == '\t' || s[end] == '\n')
-		;
-	return (end);
-}
-
-char		*ft_strtrim(char const *s)
-{
-	int		start;
-	int		end;
-	int		i;
+	size_t	i;
+	size_t	start;
+	size_t	end;
 	char	*res;
 
-	if (s == NULL)
+	i = 0;
+	if (!s)
 		return (NULL);
-	start = 0;
-	while (s[start] == ' ' || s[start] == '\t' || s[start] == '\n')
-		start++;
-	if (!s[start])
-		return (ft_strdup(""));
-	end = find_end(s, start);
-	if (!s[++end] && start == 0)
-		return (ft_strdup(s));
-	res = (char*)malloc(end - start + 1);
-	if (res == NULL)
-		return (NULL);
-	i = -1;
-	while (start < end)
-		res[++i] = s[start++];
-	res[++i] = '\0';
+	while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
+		i++;
+	start = i;
+	if (s[start] == '\0')
+		return (ft_strnew(0));
+	while (s[i])
+	{
+		if (ft_isprint((int)s[i]) && s[i] != ' ')
+			end = i;
+		i++;
+	}
+	res = ft_strsub(s, start, end - start + 1);
 	return (res);
 }

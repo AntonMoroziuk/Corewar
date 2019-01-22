@@ -6,7 +6,7 @@
 /*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/09 13:42:45 by amoroziu          #+#    #+#             */
-/*   Updated: 2019/01/19 12:57:51 by amoroziu         ###   ########.fr       */
+/*   Updated: 2019/01/20 11:56:55 by amoroziu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static char	**read_file(const int fd)
 	if (line[0] != '\n')
 	{
 		free(line);
+		err_mesg(NO_NEWLINE_AT_END, -1);
 		return (NULL);
 	}
 	lseek(fd, 0, SEEK_SET);

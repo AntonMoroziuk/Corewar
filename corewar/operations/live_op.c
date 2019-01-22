@@ -13,13 +13,23 @@
 #include "libft.h"
 #include "corewar.h"
 
-void		live_op(uint8_t *arena, t_car *car)
+void		live_debug(t_car *car, int arg)
+{
+	if (SHOW_OPERS && g_cnt_cycles >= g_start_to_show)
+	{
+		ft_printf(OPER_INFO);
+		ft_printf("%d\n", arg);
+	}
+}
+
+void		live_op(t_cell *arena, t_car *car)
 {
 	int arg;
 
+	arg = get_value(arena, (car->position + 1) % MEM_SIZE, OP.t_dir_size);
+	if (arg < 0 && ft_abs(arg) <= g_cnt_players)
+		g_last_alive = ft_abs(arg);
 	car->last_live = g_cnt_cycles;
-	arg = get_dir(arena, car, (car->position + 1) % MEM_SIZE);
-	// ft_printf("%d\n", arg);
-	if (ft_abs(arg) != 0 && ft_abs(arg) <= MAX_PLAYERS)
-		g_players[ft_abs(arg) - 1].alive = 1;
+	g_cnt_live++;
+	live_debug(car, arg);
 }

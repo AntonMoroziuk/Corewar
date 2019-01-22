@@ -3,38 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/27 11:37:38 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/30 16:32:58 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/24 10:57:43 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/24 10:57:43 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*res;
-	int		i;
-	int		j;
+	char *res;
 
-	if (s1 == NULL || s2 == NULL)
+	if (!s1 || !s2)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-		i++;
-	while (s2[j])
-		j++;
-	res = (char*)malloc(i + j + 1);
-	if (res == NULL)
+	if (!(res = ft_strnew(ft_strlen(s1) + ft_strlen(s2))))
 		return (NULL);
-	i = -1;
-	j = -1;
-	while (s1[++i])
-		res[i] = s1[i];
-	while (s2[++j])
-		res[i + j] = s2[j];
-	res[i + j] = '\0';
+	ft_strcpy(res, s1);
+	ft_strcat(res, s2);
 	return (res);
 }

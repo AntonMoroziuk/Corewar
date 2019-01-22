@@ -21,7 +21,7 @@ void	check_null(uint8_t *champ)
 	while (i < 4)
 	{
 		if (champ[i] != 0)
-			ft_printf("NULL ERROR");
+			exit_func("Null error");
 		i++;
 	}
 }
@@ -33,5 +33,5 @@ void	check_magic(uint8_t *champ)
 	ft_memcpy(&magic, champ, 4);
 	ft_memrev(&magic, 4);
 	if (magic != COREWAR_EXEC_MAGIC)
-		ft_printf("MAGIC ERROR\n");
+		exit_func("MAGIC ERROR\n");
 }

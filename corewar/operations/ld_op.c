@@ -13,23 +13,29 @@
 #include "libft.h"
 #include "corewar.h"
 
-void		ld_op(uint8_t *arena, t_car *car)
+void		ld_debug(t_car *car, int reg_num, int arg)
 {
-	int	arg;
-	int reg_num;
+	if (!SHOW_OPERS || g_cnt_cycles < g_start_to_show)
+		return ;
+	ft_printf(OPER_INFO);
+	ft_printf("%d r%d\n", arg, reg_num);
+}
 
-	// putfile_hex(MEM_SIZE, arena, 1, 32); //
-	// print_args_type(car);
-	print_args_type(car);
+/*
+**	If lld called it: get_ind wont do % IDX_MOD
+*/
+
+void		ld_op(t_cell *arena, t_car *car)
+{
+	int reg_num;
+	int	arg;
+
 	reg_num = get_reg_num(arena, car, 2);
 	if (car->args_types[0] == DIR_CODE)
-		arg = get_dir(arena, car, to_arg(arena, car, 1));
+		arg = get_value(arena, to_arg(car, 1), REG_SIZE);
 	else
-	{
-		arg = get_ind(arena, car, to_arg(arena, car, 1)) % IDX_MOD;
-		arg = get_dir(arena, car, (MEM_SIZE + car->position + arg) % MEM_SIZE);
-	}
-	ft_printf("arg: %d, reg num: %d\n", arg, reg_num);
-	car->carry = arg == 0 ? 1 : 0;
+		arg = get_ind(arena, car, 1, REG_SIZE);
 	car->regs[reg_num - 1] = arg;
+	car->carry = arg == 0 ? 1 : 0;
+	ld_debug(car, reg_num, arg);
 }

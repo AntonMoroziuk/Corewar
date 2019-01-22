@@ -3,34 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/23 16:30:21 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/10/28 13:09:04 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/10/24 08:25:05 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/10/24 08:25:06 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include "libft.h"
 
-void	*ft_memccpy(void *dest, const void *src, int c, size_t n)
+void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {
-	size_t	i;
+	size_t			i;
+	unsigned char	*tmpdst;
+	unsigned char	*tmpsrc;
+	unsigned char	tmpc;
 
 	i = 0;
-	if (c < 0)
-		c += 256;
-	if (c > 255)
-		c = c % 256;
-	while (i < n && ((unsigned char*)src)[i] != c)
+	tmpdst = (unsigned char *)dst;
+	tmpsrc = (unsigned char *)src;
+	tmpc = (unsigned char)c;
+	while (i < n)
 	{
-		((unsigned char*)dest)[i] = ((unsigned char*)src)[i];
+		tmpdst[i] = tmpsrc[i];
+		if (tmpsrc[i] == tmpc)
+		{
+			i++;
+			return (&dst[i]);
+		}
 		i++;
 	}
-	if (i == n)
-		return (NULL);
-	else
-	{
-		((unsigned char*)dest)[i] = ((unsigned char*)src)[i];
-		return ((void*)((unsigned char*)dest + i + 1));
-	}
+	return (NULL);
 }

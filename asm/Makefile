@@ -46,7 +46,8 @@ SRC_N			=	add_token.c \
 					token_with_value.c \
 					tokens.c \
 					work_with_file.c \
-					write_to_file.c
+					write_to_file.c \
+					skip_coment.c
 
 SRC_P 			= ./src/
 OBJ 			= $(addprefix $(OBJ_P),$(SRC_N:.c=.o))
@@ -63,8 +64,8 @@ LNK_LIB			= -L ../libft -l ft
 
 # compiler
 
-CC 				= gcc
 CC_FLAGS 		= -Wall -Wextra -Werror
+CC 				= gcc $(CC_FLAGS)
 
 all: obj $(ADD_LIB) $(NAME)
 
@@ -72,7 +73,7 @@ obj:
 	@mkdir -p $(OBJ_P)
 
 $(OBJ_P)%.o:$(SRC_P)%.c ./includes/asm.h ./includes/op.h ./includes/errors.h
-	@$(CC) $(CC_FLAGS) $(INC_LIB) -I $(INC_P) -o $@ -c $<
+	@$(CC) $(INC_LIB) -I $(INC_P) -o $@ -c $<
 
 $(ADD_LIB):
 	@make -C $(LIB_P)

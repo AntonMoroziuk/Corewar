@@ -3,63 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amoroziu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: okryzhan <okryzhan@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/04 10:52:16 by amoroziu          #+#    #+#             */
-/*   Updated: 2018/11/06 09:05:31 by amoroziu         ###   ########.fr       */
+/*   Created: 2018/11/03 15:56:11 by okryzhan          #+#    #+#             */
+/*   Updated: 2018/11/03 15:56:13 by okryzhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		new_line(char **files, int fd, char **line)
+static char		*ft_update_str(int path, char *st_buff, char *buff, size_t len)
 {
-	int		i;
-	char	*temp;
+	char *tmp;
 
-	i = 0;
-	while (files[fd][i] && files[fd][i] != '\n')
-		i++;
-	if (files[fd][i] == '\n')
+	tmp = st_buff;
+	if (path == 1)
+		st_buff = ft_strjoin(st_buff, buff);
+	else if (path == 2)
+		st_buff = ft_strdup(&st_buff[len + 1]);
+	free(tmp);
+	return (st_buff);
+}
+
+static int		ft_return_line(int ret, char **st_buff, int fd, char **line)
+{
+	size_t	len;
+
+	len = 0;
+	while (st_buff[fd][len] != '\n' && st_buff[fd][len] != '\0')
+		len++;
+	if (st_buff[fd][len] == '\n')
 	{
-		MALLOCCHECK_INT((*line = ft_strsub(files[fd], 0, i)));
-		temp = files[fd];
-		MALLOCCHECK_INT((files[fd] = ft_strdup(files[fd] + i + 1)));
-		free(temp);
+		*line = len ? ft_strsub(st_buff[fd], 0, len) : ft_strnew(0);
+		st_buff[fd] = ft_update_str(2, st_buff[fd], NULL, len);
+		if (st_buff[fd][0] == '\0')
+			ft_strdel(&st_buff[fd]);
 	}
 	else
 	{
-		MALLOCCHECK_INT((*line = ft_strdup(files[fd])));
-		ft_strdel(&(files[fd]));
+		*line = len ? ft_strsub(st_buff[fd], 0, len) : NULL;
+		ft_strdel(&st_buff[fd]);
+		if (*line == NULL && ret == 0)
+			return (0);
 	}
 	return (1);
 }
 
-int		get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
-	static char	*files[4863];
-	int			rs;
-	char		*buff;
-	char		*temp;
+	static char		*st_buff[MAX_FD_CNT];
+	char			buff[BUFF_SIZE + 1];
+	int				ret;
 
 	if (fd < 0 || line == NULL)
 		return (-1);
-	MALLOCCHECK_INT((buff = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))));
-	while ((rs = read(fd, buff, BUFF_SIZE)) > 0)
+	st_buff[fd] = st_buff[fd] ? st_buff[fd] : ft_strnew(0);
+	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		buff[rs] = '\0';
-		if (!files[fd])
-			files[fd] = ft_strnew(1);
-		temp = files[fd];
-		files[fd] = ft_strjoin(files[fd], buff);
-		free(temp);
-		if (ft_strchr(files[fd], '\n'))
+		buff[ret] = '\0';
+		st_buff[fd] = ft_update_str(1, st_buff[fd], buff, 0);
+		if (ft_strchr(buff, '\n'))
 			break ;
 	}
-	ft_strdel(&buff);
-	if (rs < 0)
+	if (ret < 0)
 		return (-1);
-	if (rs == 0 && (files[fd] == NULL || files[fd][0] == '\0'))
-		return (0);
-	return (new_line(files, fd, line));
+	return (ft_return_line(ret, st_buff, fd, line));
 }
